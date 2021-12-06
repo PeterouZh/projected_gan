@@ -9,6 +9,8 @@ import json
 import torch
 import dnnlib
 
+from tl2.proj.fvcore import global_cfg
+
 from . import metric_utils
 from . import frechet_inception_distance
 from . import kernel_inception_distance
@@ -80,7 +82,10 @@ def report_metric(result_dict, run_dir=None, snapshot_pkl=None):
 @register_metric
 def fid50k_full(opts):
     opts.dataset_kwargs.update(max_size=None, xflip=False)
-    fid = frechet_inception_distance.compute_fid(opts, max_real=None, num_gen=50000)
+    num_gen = 50000
+    if global_cfg.tl_debug:
+        num_gen = 100
+    fid = frechet_inception_distance.compute_fid(opts, max_real=None, num_gen=num_gen)
     return dict(fid50k_full=fid)
 
 @register_metric

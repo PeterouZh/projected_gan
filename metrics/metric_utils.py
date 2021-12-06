@@ -43,7 +43,7 @@ _feature_detector_cache = dict()
 def get_feature_detector_name(url):
     return os.path.splitext(url.split('/')[-1])[0]
 
-def get_feature_detector(url, device=torch.device('cpu'), num_gpus=1, rank=0, verbose=False):
+def get_feature_detector(url, device=torch.device('cpu'), num_gpus=1, rank=0, verbose=True):
     assert 0 <= rank < num_gpus
     key = (url, device)
     if key not in _feature_detector_cache:
@@ -210,7 +210,7 @@ def compute_feature_stats_for_dataset(opts, detector_url, detector_kwargs, rel_l
         # Choose cache file name.
         args = dict(dataset_kwargs=opts.dataset_kwargs, detector_url=detector_url, detector_kwargs=detector_kwargs, stats_kwargs=stats_kwargs)
         md5 = hashlib.md5(repr(sorted(args.items())).encode('utf-8'))
-        cache_tag = f'{dataset.name}-{det_name}-{md5.hexdigest()}'
+        cache_tag = f'{dataset.name}-{len(dataset)}-{det_name}-{md5.hexdigest()}'
         cache_file = os.path.join('.', 'dnnlib', 'gan-metrics', cache_tag + '.pkl')
         # cache_file = dnnlib.make_cache_dir_path('gan-metrics', cache_tag + '.pkl')
 
