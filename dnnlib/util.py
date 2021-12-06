@@ -440,7 +440,7 @@ def open_url(url: str, cache_dir: str = None, num_attempts: int = 10, verbose: b
     url_data = None
     with requests.Session() as session:
         if verbose:
-            print("Downloading %s ..." % url, end="", flush=True)
+            print("[[Downloading %s ..." % url, end="", flush=True)
         for attempts_left in reversed(range(num_attempts)):
             try:
                 with session.get(url) as res:
@@ -483,6 +483,8 @@ def open_url(url: str, cache_dir: str = None, num_attempts: int = 10, verbose: b
         with open(temp_file, "wb") as f:
             f.write(url_data)
         os.replace(temp_file, cache_file) # atomic
+        if verbose:
+            print(f"Save inception net to {cache_file}")
         if return_filename:
             return cache_file
 
