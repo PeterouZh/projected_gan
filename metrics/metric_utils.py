@@ -30,7 +30,7 @@ class MetricOptions:
         self.num_gpus       = num_gpus
         self.rank           = rank
         self.device         = device if device is not None else torch.device('cuda', rank)
-        self.progress       = progress.sub() if progress is not None and rank == 0 else ProgressMonitor()
+        self.progress       = progress.sub() if progress is not None and rank == 0 else ProgressMonitor(verbose=True)
         self.cache          = cache
         self.run_dir = run_dir
         self.cur_nimg = cur_nimg
@@ -176,7 +176,8 @@ class ProgressMonitor:
         total_time = cur_time - self.start_time
         time_per_item = (cur_time - self.batch_time) / max(cur_items - self.batch_items, 1)
         if (self.verbose) and (self.tag is not None):
-            print(f'{self.tag:<19s} items {cur_items:<7d} time {dnnlib.util.format_time(total_time):<12s} ms/item {time_per_item*1e3:.2f}')
+            print(f'{self.tag:<19s} items {cur_items:<7d} time {dnnlib.util.format_time(total_time):<12s} ms/item {time_per_item*1e3:.2f}',
+                  end='\r')
         self.batch_time = cur_time
         self.batch_items = cur_items
 

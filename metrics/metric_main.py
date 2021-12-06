@@ -82,7 +82,8 @@ def report_metric(result_dict, run_dir=None, snapshot_pkl=None):
 @register_metric
 def fid50k_full(opts):
     opts.dataset_kwargs.update(max_size=None, xflip=False)
-    num_gen = 50000
+    # num_gen = 50000
+    num_gen = global_cfg.get('num_images_gen_eval', 50000)
     if global_cfg.tl_debug:
         num_gen = 100
     fid = frechet_inception_distance.compute_fid(opts, max_real=None, num_gen=num_gen)
